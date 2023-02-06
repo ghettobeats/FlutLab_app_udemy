@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   final Function addtx;
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+
   NewTransaction(this.addtx);
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void submitData() {
+    final submitText = titleController.text;
+    final submitamount = double.parse(amountController.text);
+    if (submitText.isEmpty || submitamount <= 0) return;
+    widget.addtx(submitText, submitamount);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) => Card(
         elevation: 5,
@@ -14,6 +31,7 @@ class NewTransaction extends StatelessWidget {
             TextField(
               decoration: InputDecoration(labelText: 'Title'),
               controller: titleController,
+              onSubmitted: (_) => submitData(),
               // onChanged: (value) {
               //   titleInput = value;
               // },
@@ -21,19 +39,16 @@ class NewTransaction extends StatelessWidget {
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
               controller: amountController,
-              keyboardType: TextInputType.datetime,
+              keyboardType: TextInputType.number,
+              onSubmitted: (_) => submitData(),
               // onChanged: (value) => amountInput = value,
             ),
             TextButton(
-              onPressed: () => {
-                addtx(
-                  titleController.text,
-                  double.parse(amountController.text),
-                )
-              },
-              child: Text('Add Transactions',
+              onPressed: submitData,
+              child: Text('ADD TRANSACTION',
                   style: TextStyle(
-                    color: Colors.purple,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
                   )),
             )
           ]),

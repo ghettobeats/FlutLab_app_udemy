@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-import 'package:intl/intl.dart';
+import 'package:udemyappflutter/widgets/chart.dart';
+import 'package:udemyappflutter/widgets/new_transaction.dart';
 
 import 'models/transaction.dart';
-import 'widgets/user_transaction.dart';
+import 'widgets/transaction_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,45 +17,92 @@ class MyApp extends StatelessWidget {
         // Application theme data, you can set the colors for the application as
         // you want
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.purple,
+          fontFamily: 'Itim',
+          // appBarTheme: AppBarTheme(
+          //   titleTextStyle: TextStyle(
+          //     fontFamily: 'Itim',
+          //     fontSize: 28,
+          //     fontWeight: FontWeight.bold,
+          //     color: Colors.white,
+          //   ),
+          // ),
         ),
         // A widget which will be started on application startup
         home: MyHomePage(
-          title: 'Flutter Demo Home Page',
+          title: 'Udemy App',
         ),
         debugShowCheckedModeBanner: false,
       );
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   // String titleInput = '';
-  // String amountInput = '';
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+  final List<Transaction> _userTransactions = [];
+
+//get a list of transaction resent
+  List<Transaction> get recentTransactions => _userTransactions
+      .where(
+          (tx) => tx.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
+      .toList();
+
+  void _addnewTransaction(String title, double amount) {
+    setState(() {
+      _userTransactions.add(
+        Transaction(
+            id: DateTime.now().toString(), title: title, amount: amount),
+      );
+    });
+  }
+
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) => GestureDetector(
+          child: NewTransaction(_addnewTransaction),
+          onTap: () {},
+          behavior: HitTestBehavior.opaque),
+    );
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           // The title text which will be shown on the action bar
-          title: Text(title),
+          title: Text(widget.title),
+          actions: [
+            IconButton(
+                onPressed: () => _startAddNewTransaction(context),
+                icon: const Icon(
+                  Icons.add,
+                ))
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: double.infinity,
-                child: Card(
-                  child: Text('Targeta de datos'),
-                  elevation: 5,
-                ),
-              ),
-              UserTransactions(),
+              Chart(recentTransactions),
+              TransactionList(userTransactions: _userTransactions),
             ],
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => _startAddNewTransaction(context),
+            elevation: 2,
+            tooltip: 'Add Transaction',
+            child: const Icon(
+              Icons.add,
+            )),
       );
 }
