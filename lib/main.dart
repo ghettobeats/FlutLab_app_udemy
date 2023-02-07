@@ -98,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.amber,
             onPressed: () => _startAddNewTransaction(context),
             elevation: 2,
             tooltip: 'Add Transaction',
