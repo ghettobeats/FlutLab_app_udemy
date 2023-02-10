@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:udemyappflutter/widgets/chart.dart';
 import 'package:udemyappflutter/widgets/new_transaction.dart';
 
@@ -47,7 +47,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // String titleInput = '';
-  final List<Transaction> _userTransactions = [];
+  final List<Transaction> _userTransactions = [
+    Transaction(
+        amount: 150.00, title: 'Platanos', id: '1', date: DateTime.now())
+  ];
 
 //get a list of transaction resent
   List<Transaction> get recentTransactions => _userTransactions
@@ -55,11 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
           (tx) => tx.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
       .toList();
 
-  void _addnewTransaction(String title, double amount) {
+  void _addnewTransaction(String title, double amount, DateTime date) {
     setState(() {
       _userTransactions.add(
         Transaction(
-            id: DateTime.now().toString(), title: title, amount: amount),
+            id: DateTime.now().toString(),
+            title: title,
+            amount: amount,
+            date: date),
       );
     });
   }
