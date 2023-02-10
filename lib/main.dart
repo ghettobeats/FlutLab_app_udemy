@@ -85,35 +85,50 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          // The title text which will be shown on the action bar
-          title: Text(widget.title),
-          actions: [
-            IconButton(
-                onPressed: () => _startAddNewTransaction(context),
-                icon: const Icon(
-                  Icons.add,
-                ))
+  Widget build(BuildContext context) {
+    final appbar = AppBar(
+      // The title text which will be shown on the action bar
+      title: Text(widget.title),
+      actions: [
+        IconButton(
+            onPressed: () => _startAddNewTransaction(context),
+            icon: const Icon(
+              Icons.add,
+            ))
+      ],
+    );
+    return Scaffold(
+      appBar: appbar,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appbar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.4,
+              child: Chart(recentTransactions),
+            ),
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appbar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.6,
+              child: TransactionList(_userTransactions, _deleteTransaction),
+            ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Chart(recentTransactions),
-              TransactionList(_userTransactions, _deleteTransaction),
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.amber,
-            onPressed: () => _startAddNewTransaction(context),
-            elevation: 2,
-            tooltip: 'Add Transaction',
-            child: const Icon(
-              Icons.add,
-            )),
-      );
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.amber,
+          onPressed: () => _startAddNewTransaction(context),
+          elevation: 2,
+          tooltip: 'Add Transaction',
+          child: const Icon(
+            Icons.add,
+          )),
+    );
+  }
 }
