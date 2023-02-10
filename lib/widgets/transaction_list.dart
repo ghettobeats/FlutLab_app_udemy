@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> userTransactions;
+  final Function deleteTransaction;
 
-  TransactionList({required this.userTransactions});
+  TransactionList(this.userTransactions, this.deleteTransaction);
 
   @override
   Widget build(BuildContext context) => Container(
-        height: 300,
+        height: 400,
         child: userTransactions.isEmpty
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +50,12 @@ class TransactionList extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyLarge),
                     subtitle: Text(DateFormat.yMMMd()
                         .format(userTransactions[index].date)),
-                    trailing: Icon(Icons.menu),
+                    trailing: IconButton(
+                      onPressed: () =>
+                          deleteTransaction(userTransactions[index].id),
+                      icon: Icon(Icons.delete),
+                      color: Theme.of(context).errorColor,
+                    ),
                   ),
                 ),
                 itemCount: userTransactions.length,

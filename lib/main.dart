@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:udemyappflutter/widgets/chart.dart';
 import 'package:udemyappflutter/widgets/new_transaction.dart';
 
@@ -47,10 +48,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // String titleInput = '';
-  final List<Transaction> _userTransactions = [
-    Transaction(
-        amount: 150.00, title: 'Platanos', id: '1', date: DateTime.now())
-  ];
+  final List<Transaction> _userTransactions = [];
 
 //get a list of transaction resent
   List<Transaction> get recentTransactions => _userTransactions
@@ -67,6 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
             amount: amount,
             date: date),
       );
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((element) => element.id == id);
     });
   }
 
@@ -98,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Chart(recentTransactions),
-              TransactionList(userTransactions: _userTransactions),
+              TransactionList(_userTransactions, _deleteTransaction),
             ],
           ),
         ),
