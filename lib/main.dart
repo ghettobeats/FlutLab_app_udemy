@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import 'package:udemyappflutter/widgets/chart.dart';
 import 'package:udemyappflutter/widgets/new_transaction.dart';
@@ -49,7 +48,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // String titleInput = '';
   final List<Transaction> _userTransactions = [];
-
+  bool _showChart = false;
 //get a list of transaction resent
   List<Transaction> get recentTransactions => _userTransactions
       .where(
@@ -97,26 +96,56 @@ class _MyHomePageState extends State<MyHomePage> {
             ))
       ],
     );
+    final txList = Container(
+      height: (MediaQuery.of(context).size.height -
+              appbar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child: TransactionList(_userTransactions, _deleteTransaction),
+    );
+    final _isLandScape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Scaffold(
       appBar: appbar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              height: (MediaQuery.of(context).size.height -
-                      appbar.preferredSize.height -
-                      MediaQuery.of(context).padding.top) *
-                  0.4,
-              child: Chart(recentTransactions),
-            ),
-            Container(
-              height: (MediaQuery.of(context).size.height -
-                      appbar.preferredSize.height -
-                      MediaQuery.of(context).padding.top) *
-                  0.6,
-              child: TransactionList(_userTransactions, _deleteTransaction),
-            ),
+            if (_isLandScape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show chart'),
+                  Switch(
+                    value: _showChart,
+                    onChanged: (value) {
+                      setState(() {
+                        _showChart = value;
+                      });
+                    },
+                  )
+                ],
+              ),
+            if (!_isLandScape)
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        appbar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: Chart(recentTransactions),
+              ),
+            if (!_isLandScape) txList,
+            if (_isLandScape)
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appbar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7,
+                      child: Chart(recentTransactions),
+                    )
+                  : txList,
           ],
         ),
       ),
