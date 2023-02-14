@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaQuery = MediaQuery.of(context);
 
     final appBar;
-    if (Platform.isAndroid) {
+    if (Platform.isIOS) {
       appBar = CupertinoNavigationBar(
         middle: Text('Personal Expenses'),
         trailing: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -181,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
             body: pageBody,
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: Platform.isAndroid
+            floatingActionButton: Platform.isIOS
                 ? Container()
                 : FloatingActionButton(
                     backgroundColor: Colors.amber,
