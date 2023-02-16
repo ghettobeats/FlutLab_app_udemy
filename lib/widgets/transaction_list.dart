@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
+import 'transaction_item.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> userTransactions;
@@ -34,38 +34,9 @@ class TransactionList extends StatelessWidget {
           );
         })
       : ListView.builder(
-          itemBuilder: (_, index) => Card(
-            elevation: 6,
-            margin: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 30,
-                child: Padding(
-                  padding: EdgeInsets.all(6),
-                  child: FittedBox(
-                      child: Text("\$${userTransactions[index].amount}")),
-                ),
-              ),
-              title: Text(userTransactions[index].title,
-                  style: Theme.of(context).textTheme.bodyLarge),
-              subtitle:
-                  Text(DateFormat.yMMMd().format(userTransactions[index].date)),
-              trailing: MediaQuery.of(context).size.width > 360
-                  ? TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Theme.of(context).errorColor,
-                      ),
-                      child: Icon(Icons.delete),
-                      onPressed: () =>
-                          deleteTransaction(userTransactions[index].id),
-                    )
-                  : IconButton(
-                      onPressed: () =>
-                          deleteTransaction(userTransactions[index].id),
-                      icon: Icon(Icons.delete),
-                      color: Theme.of(context).errorColor,
-                    ),
-            ),
+          itemBuilder: (ctx, index) => TransactionItem(
+            userTransaction: userTransactions[index],
+            deleteTransaction: deleteTransaction,
           ),
           itemCount: userTransactions.length,
         );
